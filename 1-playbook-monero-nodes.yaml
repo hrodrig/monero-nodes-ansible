@@ -29,6 +29,7 @@
       - netstat-nat
       - socat
       - software-properties-common
+      - tor
       - ufw
       - unzip
       - util-linux
@@ -111,6 +112,13 @@
       owner: monero
       group: monero
       mode: 0777
+
+  - name: Copying monero banned ip list to remote server
+    copy:
+      src: artifacts/monero-ban-list.txt
+      dest: /etc/monero/monero-ban-list.txt
+      owner: monero
+      group: monero
 
   - name: Load the new systemd script for monerod and start the monerod service
     systemd:
