@@ -6,7 +6,7 @@ Monero node ansible playbook setup and hardening
 
 Edit `env_variables` file and set current monerod version, for example `v0.17.2.3` (current version).
 
-Edit `4-playbook-ss-.yaml` file and edit:
+Edit `4-playbook-ssh-.yaml` file and edit:
 
 ```yaml
   - name: Ensure valid ssh accounts
@@ -22,7 +22,7 @@ and add you user to `AllowUsers root`, for example `AllowUsers myusername root`
 
 Edit `hosts` file and include your own nodes, for example:
 
-```bash
+```shell
 [nodes]
 node1	ansible_host=10.15.22.31
 node2	ansible_host=10.15.22.32
@@ -33,15 +33,31 @@ node4	ansible_host=10.15.22.34
 then apply your manifests, (you need to be sure that the ssh passworless access is granted to root user)
 
 ```shell
+# base file
 root@node0:~# ansible-playbook 1-playbook-monero-nodes.yaml
+
+# some kernel hardening
 root@node0:~# ansible-playbook 2-playbook-kernel-hardening.yaml
+
+# configure AIDE
 root@node0:~# ansible-playbook 3-playbook-aide.yaml
+
+# SSH hardening
 root@node0:~# ansible-playbook 4-playbook-ssh.yaml
+
+# Firewall configuration
 root@node0:~# ansible-playbook 5-playbook-firewall.yaml
+
+# you can use all playboks at same time
+root@node0:~# ansible-playbook 1-playbook-monero-nodes.yaml 2-playbook-kernel-hardening.yaml 3-playbook-aide.yaml 4-playbook-ssh.yaml 5-playbook-firewall.yaml
 ```
+
+  **Tip:** you can speed bootstrap download by commenting `db-sync-mode=safe` in `/etc/monero/monerod.conf` file and restart monerod service. After initial bootstrap download, it's recommend to set active the db-sync-mode option.
+
+
 Check for monero logs:
 
-```sh
+```shell
 tail -f /var/log/monero/monerod.log
 ```
 
@@ -51,7 +67,7 @@ Some **bad monero guys ip addresses** are included in the file `/etc/monero/mone
 
 Your'e done !!
 
-TODO: Add Tor support
+  TODO: Add Tor support
 
 # Additional Monero Daemon Options
 
@@ -93,8 +109,7 @@ Below are some popular daemon options. Please ignore all brackets [] and the hel
 From the monerod help:
 
 ```sh
-# /opt/monero/monerod -h
-Failed to parse arguments: unrecognised option '-h'
+# monerod --help
 Options:
   --help                                Produce help message
   --version                             Output version information
