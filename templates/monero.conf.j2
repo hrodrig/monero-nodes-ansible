@@ -1,27 +1,44 @@
 # /etc/monero/monerod.conf
+#
+# Configuration file for monerod. For all available options see the MoneroDocs:
+# https://monerodocs.org/interacting/monerod-reference/
 
 # Data directory (blockchain db and indices)
 data-dir=/var/lib/monero/.bitmonero
 
 # Log file
-log-file=/var/log/monero/monerod.log
+log-file=/var/log/monero/monerod.log  # monerod log file
+log-level=0                           # Minimal logs, WILL NOT log peers or wallets connecting
+max-log-file-size=2147483648          # Set to 2GB to mitigate log trimming by monerod; configure logrotate instead
 
 # P2P configuration
-# p2p-bind-ip=0.0.0.0            # Bind to all interfaces (the default)
-# p2p-bind-port=18080            # Bind to default port
+# p2p-bind-ip=0.0.0.0                 # Bind to all interfaces (the default)
+# p2p-bind-port=18080                 # Bind to default port
 
 # RPC configuration
-rpc-restricted-bind-ip=0.0.0.0            # Bind restricted RPC to all interfaces
-rpc-restricted-bind-port=18089            # Bind restricted RPC on custom port to differentiate from default unrestricted RPC (18081)
-confirm-external-bind=1        # Open restricted RPC node (confirm)
-no-igd=1                       # Disable UPnP port mapping
+restricted-rpc=1                      # Restricts the actions that external users can perform when they are connected to the node over RPC. You will typically want to use this option.
+rpc-restricted-bind-ip=0.0.0.0        # Bind restricted RPC to all interfaces
+rpc-restricted-bind-port=18089        # Bind restricted RPC on custom port to differentiate from default unrestricted RPC (18081)
+confirm-external-bind=1               # Open restricted RPC node (confirm). Confirm rpc-bind-ip value is NOT a loopback (local) IP
+no-igd=1                              # Disable UPnP port mapping
+rpc-ssl=autodetect                    # Use TLS if client wallet supports it (the default behavior); the certificate will be generated on the fly on every restart
+disable-rpc-ban=1                     # Do not ban hosts on RPC errors
+
+# Mempool size
+max-txpool-weight=268435456           # Maximum unconfirmed transactions pool size in bytes (here 256MB, default ~618MB)
+
+# Slow but reliable db writes
+db-sync-mode=safe
+out-peers=64                          # This will enable much faster sync and tx awareness; the default 8 is suboptimal nowadays
+in-peers=64                           # The default is unlimited; we prefer to put a cap on this
 
 # ZMQ configuration
 no-zmq=1
 
 # Block known-malicious nodes from a DNSBL
-enable-dns-blocklist=1
+enable-dns-blocklist=1                # Apply realtime blocklist from DNS
+ban-list=/etc/monero/monero-ban-list.txt     # Specify ban list file, one IP address per line
 
 # Set download and upload limits, if desired
-limit-rate-up=128000 # 128000 kB/s == 125MB/s == 1GBit/s; a raise from default 2048 kB/s; contribute more to p2p network
-limit-rate-down=128000 # 128000 kB/s == 125MB/s == 1GBit/s; a raise from default 2048 kB/s; contribute more to p2p network
+limit-rate-up=128000                  # 128000 kB/s == 125MB/s == 1GBit/s; a raise from default 2048 kB/s; contribute more to p2p network
+limit-rate-down=128000                # 128000 kB/s == 125MB/s == 1GBit/s; a raise from default 2048 kB/s; contribute more to p2p network
