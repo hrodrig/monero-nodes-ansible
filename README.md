@@ -331,3 +331,11 @@ Settings:
   --rpc-payment-allow-free-loopback     Allow free access from the loopback
                                         address (ie, the local host)
 ```
+
+# Donation Address
+
+Your support is important to keep this project. If you want to support, please send colaborations to the following Monero Address: 
+
+**42SrpsLT5SuJZFCA9UKVp8cYMsYpmi66MczLkNobaJ9wQVKuiRwDYQd6jrwCPAHSjkVfthw8Jrv1JQdMWiqYdy1WRfphh7J**
+
+Right now I'm setting four public monero nodes to support Monero Project. When first donation was received, I'll publish here the onion addresses for these servers (2021-12-07).
