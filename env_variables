@@ -1,0 +1,12 @@
+aide_package: "aide"
+auditd_package: "audit"
+modprobe_package: "kmod"
+monerod_version: "v0.17.2.3"
+shell_timeout_sec: 900
+ssh_ciphers: "aes128-ctr,aes192-ctr,aes256-ctr"
+ssh_key_algorithms: "curve25519-sha256,curve25519-sha256@libssh.org,diffie-hellman-group14-sha256,diffie-hellman-group16-sha512,diffie-hellman-group18-sha512,ecdh-sha2-nistp521,ecdh-sha2-nistp384,ecdh-sha2-nistp256,diffie-hellman-group-exchange-sha256"
+ssh_listen_address: "0.0.0.0"
+ssh_MACs: "hmac-sha2-512,hmac-sha2-256"
+ssh_max_sessions: 4
+ssh_max_startups: "10:30:100"
+ssh_root_login: "without-password" # prohibit-password
