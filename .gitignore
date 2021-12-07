@@ -10,6 +10,10 @@
 !k8s
 !*.yml
 !*.yaml
+!ansible.cfg
+!env_variables
+!hosts
+!templates
 # Exclude some patterns
 /**/.*
 !.gitignore
