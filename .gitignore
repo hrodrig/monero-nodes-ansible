@@ -13,6 +13,7 @@
 !ansible.cfg
 !env_variables
 !hosts
+!artifacts
 !templates
 # Exclude some patterns
 /**/.*
