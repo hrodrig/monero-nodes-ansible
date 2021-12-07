@@ -1,29 +1,39 @@
 
 - hosts: all
+  user: root
+  vars_files:
+  - env_variables
   tasks:
 
-  - name: Allow ssh
-    ufw:
-      rule: allow
-      port: ssh
-      proto: tcp
-
-  - name: Allow monerod p2p port tcp port 18080
-    ufw:
-      rule: allow
-      port: '18080'
-      proto: tcp
-  
-  - name: Allow monerod restricted RPC port
-    ufw:
-      rule: allow
-      port: '18089'
-      proto: tcp
-
-  - name: Allow everything and enable UFW
-    ufw:
-      state: enabled
-      policy: deny
+  - name: "Install extra packages"
+    package: name={{item}} state=present
+    with_items:
+      - aide
+      - apt-transport-https
+      - bzip2
+      - ca-certificates
+      - chrony
+      - conntrack
+      - conntrackd
+      - curl
+      - ebtables
+      - ethtool
+      - fail2ban
+      - gnupg-agent
+      - htop
+      - iptraf-ng
+      - lsof
+      - nano
+      - net-tools
+      - netdata
+      - netstat-nat
+      - socat
+      - software-properties-common
+      - ufw
+      - unzip
+      - util-linux
+      - vim
+      - zip
 
   - name: Add group "monero" to remote server
     group:
@@ -96,12 +106,11 @@
   - name: Copying monerod
     copy:
       remote_src: yes
-      src: /usr/local/bin/monero-x86_64-linux-gnu-v0.17.1.9/monerod
+      src: /usr/local/bin/monero-x86_64-linux-gnu-{{ monerod_version }}/monerod
       dest: /usr/local/bin/
       owner: monero
       group: monero
       mode: 0777
-
 
   - name: Load the new systemd script for monerod and start the monerod service
     systemd:
@@ -109,3 +118,9 @@
       enabled: yes
       daemon_reload: yes
       name: monerod
+
+  - name: Ensure the NetData Agent service is running
+    service:
+      name: netdata
+      state: started
+      enabled: yes

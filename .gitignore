@@ -1,0 +1,21 @@
+#
+# ignore all files and then exclude each directory and file individually
+/*
+!.gitignore
+!.dockerignore
+!*.Dockerfile
+!Jenkinsfile
+!sonar-project.properties
+!README.md
+!k8s
+!*.yml
+!*.yaml
+!ansible.cfg
+!env_variables
+!hosts
+!templates
+# Exclude some patterns
+/**/.*
+!.gitignore
+!.dockerignore
+

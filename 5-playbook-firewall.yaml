@@ -1,0 +1,90 @@
+---
+# ansible-galaxy collection install community.general.ufw
+- hosts: [all]
+  user: root
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: Allow everything and enable UFW
+    community.general.ufw:
+      state: enabled
+      policy: allow
+
+  - name: Set logging
+    community.general.ufw:
+      logging: 'on'
+
+  # Sometimes it is desirable to let the sender know when traffic is
+  # being denied, rather than simply ignoring it. In these cases, use
+  # reject instead of deny. In addition, log rejected connections:
+  - name: Reject and Log
+    community.general.ufw:
+      rule: reject
+      port: auth
+      log: yes
+
+  # ufw supports connection rate limiting, which is useful for protecting
+  # against brute-force login attacks. ufw will deny connections if an IP
+  # address has attempted to initiate 6 or more connections in the last
+  # 30 seconds. See  http://www.debian-administration.org/articles/187
+  # for details. Typical usage is:
+  - name: Limit SSH
+    community.general.ufw:
+      rule: limit
+      port: ssh
+      proto: tcp
+
+  # Allow OpenSSH. (Note that as ufw manages its own state, simply removing
+  # a rule=allow task can leave those ports exposed. Either use delete=yes
+  # or a separate state=reset task)
+  - name: Allow SSH
+    community.general.ufw:
+      rule: allow
+      name: OpenSSH
+
+  - name: Delete OpenSSH rule
+    community.general.ufw:
+      rule: allow
+      name: OpenSSH
+      delete: yes
+
+  - name: Deny everything by policy
+    community.general.ufw:
+      state: enabled
+      policy: deny
+
+  - name: Deny all access to port 53
+    community.general.ufw:
+      rule: deny
+      port: '53'
+
+  - name: Allow monerod p2p port tcp port 18080
+    community.general.ufw:
+      rule: allow
+      port: '18080'
+      proto: tcp
+
+  # Open firewall ports
+  # If you use a firewall (and you should), open 18080 and 18081 ports for incoming TCP connections. These are for the incoming clearnet connections, P2P and RPC respectively.
+  # You do not need to open any ports for Tor. The onion services work with virtual ports. The tor daemon does not directly accept incoming connections and so it needs no open ports.
+  #
+  # Binds the daemon to an IP address. You need to use your external IP if you plan to access this daemon from outside the internal network, or an internal one if you only want it to work for devices in the same network. If you are unsure about whether to use internal or external, you most likely want to use the external IP address. You can find this by using the IP address the VPS provider gave you or by searching for it with a site such as ipleak.net.
+  # Binds the daemon to a port. Keep in mind the daemon will be unsafe unless this option is also run with --restricted-rpc. The default option is 18081, though some services (such as MoneroWorld) use 18089.
+  - name: Allow monerod RPC port tcp port 18081
+    community.general.ufw:
+      rule: allow
+      port: '18081'
+      proto: tcp
+
+  - name: Allow monerod restricted RPC port 18089
+    community.general.ufw:
+      rule: allow
+      port: '18089'
+      proto: tcp
+
+  - name: Deny everything and enable UFW
+    community.general.ufw:
+      state: enabled
+      policy: deny
+      log: yes
