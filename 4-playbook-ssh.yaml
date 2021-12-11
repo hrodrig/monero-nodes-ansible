@@ -82,16 +82,6 @@
       line: "PermitRootLogin {{ ssh_root_login }}"
       validate: /usr/sbin/sshd -t -f %s
 
-  # CIS 5.2.9
-  # STIG 040460
-  - name: Ensure SSH UsePrivilegeSeparation is enabled
-    lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
-      regexp: "^#UsePrivilegeSeparation|^UsePrivilegeSeparation"
-      line: "UsePrivilegeSeparation sandbox"
-      validate: /usr/sbin/sshd -t -f %s
-
   # CIS 5.2.10
   # STIG 010460
   - name: Ensure SSH PermitUserEnvironment is disabled
@@ -267,7 +257,7 @@
       state: present
       dest: /etc/ssh/sshd_config
       regexp: "^#AllowUsers|^AllowUsers"
-      line: 'AllowUsers root'
+      line: "AllowUsers {{ ssh_allow_users }}"
       validate: /usr/sbin/sshd -t -f %s
 
   - name: "Set SSH listen ip address to {{ ssh_listen_address }}"
