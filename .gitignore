@@ -6,6 +6,7 @@
 !*.Dockerfile
 !Jenkinsfile
 !sonar-project.properties
+!CHANGELOG.md
 !README.md
 !k8s
 !*.yml
