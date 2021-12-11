@@ -1,6 +1,10 @@
 # monero-nodes-ansible
 
-Monero node ansible playbook setup and hardening
+Monero node ansible playbook setup and hardening with Tor support
+
+### Changelog
+
+see changelog [here](CHANGELOG.md)
 
 ### Setup
 
@@ -48,14 +52,8 @@ root@node0:~# ansible-playbook 4-playbook-ssh.yaml
 # Firewall configuration
 root@node0:~# ansible-playbook 5-playbook-firewall.yaml
 
-# Setup Fail2Ban (is important to avoid SSH attacks)
-root@node0:~# ansible-playbook 6-playbook-fail2ban.yaml
-
-# Custom sudo user (recommended)
-root@node0:~# ansible-playbook 7-playbook-users.yaml
-
 # you can use all playboks at same time
-root@node0:~# ansible-playbook 1-playbook-monero-nodes.yaml 2-playbook-kernel-hardening.yaml 3-playbook-aide.yaml 4-playbook-ssh.yaml 5-playbook-firewall.yaml 6-playbook-fail2ban.yaml 7-playbook-users.yaml
+root@node0:~# ansible-playbook 1-playbook-monero-nodes.yaml 2-playbook-kernel-hardening.yaml 3-playbook-aide.yaml 4-playbook-ssh.yaml 5-playbook-firewall.yaml
 ```
 
   **Tip:** you can speed bootstrap download by commenting `db-sync-mode=safe` in `/etc/monero/monerod.conf` file and restart monerod service. After initial bootstrap download, it's recommend to set active the db-sync-mode option.
@@ -340,7 +338,7 @@ Settings:
 
 # Fail2Ban
 
-Your server will be ever under SSH attacks. It's recommended to setup and configure Fail2Ban. From this way, by every unsucsessful ssh login atempt in the range of 60 seconds, these remote ip address will be DROPED by one full gay to acces your server.
+Your server will always be under multiple attacks, especially SSH. It is recommended to install and configure Fail2Ban to mitigate these types of attacks. In our default configuration, for every three unsuccessful access attempts via SSH, occurring within the one minute time interval, then that IP address will be blocked for 24 hours. All communication originating from the banned IP will be simply dropped.
 
 Use strong passwords, at least 24 characters or user `pwgen` to generate it.
 
@@ -349,7 +347,13 @@ Use strong passwords, at least 24 characters or user `pwgen` to generate it.
 ti7eufi.yeitahxech9goiCh
 ```
 
-You can customize these settings in the `env_variables` file.
+By editing the `env_variables` file you can set your custom values to define Fail2Ban behavior, including where to receive emails when an attacker is banned.
+
+```bash
+# Setup Fail2Ban (is important to avoid SSH attacks)
+root@node0:~# ansible-playbook 6-playbook-fail2ban.yaml
+```
+
 # Additional sudo user
 
 It's recommended to have an additional privileged user in your server.
@@ -357,6 +361,11 @@ It's recommended to have an additional privileged user in your server.
 Please, edit the `env_variables` file and setup your local private and pub keys.
 
 You can customize these settings in the `env_variables` file.
+
+```bash
+# Custom sudo user (recommended)
+root@node0:~# ansible-playbook 7-playbook-users.yaml
+```
 
 # Donation Address
 
