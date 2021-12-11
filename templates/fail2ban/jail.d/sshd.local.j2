@@ -1,0 +1,11 @@
+# https://www.booleanworld.com/protecting-ssh-fail2ban/
+[sshd]
+
+enabled = true
+port = ssh
+logpath = %(sshd_log)s
+banaction = iptables-multiport
+filter = sshd
+bantime = {{ fail2ban_bantime }}
+findtime = {{ fail2ban_findtime }}
+maxretry = {{ fail2ban_maxretry }}

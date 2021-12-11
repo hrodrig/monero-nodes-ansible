@@ -1,0 +1,45 @@
+- hosts: [all]
+  user: root
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: install required packages
+    package: name={{item}} state=present
+    with_items:
+      - fail2ban
+
+  - name: remove configuration file - /etc/fail2ban/jail.d/defaults-debian.conf
+    file:
+      state: absent
+      path: /etc/fail2ban/jail.d/defaults-debian.conf
+  
+  - name: update configuration file - /etc/fail2ban/jail.local
+    template:
+      src: templates/fail2ban/jail.local.j2
+      dest: /etc/fail2ban/jail.local
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: copy sshd jail - /etc/fail2ban/jail.d/sshd.local
+    template:
+      src: templates/fail2ban/jail.d/sshd.local.j2
+      dest: /etc/fail2ban/jail.d/sshd.local
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Reload fail2ban
+    service:
+      name: fail2ban
+      enabled: true
+      state: restarted
+    changed_when: no
+
+  - debug:
+      msg: "Please check fail2ban status with: systemctl status fail2ban"
+  - debug:
+      msg: "Can check for banned ip with: fail2ban-client status sshd"
+  - debug:
+      msg: "Can check fail2ban logs with: tail -f /var/log/fail2ban.log"

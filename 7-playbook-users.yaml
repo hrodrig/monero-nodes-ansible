@@ -1,0 +1,47 @@
+# ansible-galaxy collection install ansible.posix
+- hosts: [all]
+  gather_facts: no
+  user: root
+  vars_files:
+  - env_variables
+
+  tasks:
+  - name: Add group "{{ user_name }}" to remote server
+    group:
+       name: "{{ user_name }}"
+       state: present 
+  
+  - name: Add user "{{ user_name }}" to remote server
+    user:
+       name: "{{ user_name }}"
+       group: "{{ user_name }}"
+       shell: /bin/bash
+
+  - name: Add "{{ user_name }}" user to the sudoers
+    copy:
+      dest: "/etc/sudoers.d/{{ user_name }}"
+      content: "{{ user_name }}  ALL=(ALL)  NOPASSWD: ALL"
+
+  - name: deploy "{{ user_name }}" SSH Public Key
+    ansible.posix.authorized_key:
+      user: "{{ user_name }}"
+      state: present
+      key: "{{ lookup('file', '{{ user_certificate_pub }}') }}"
+
+  - name: Ensure valid ssh accounts
+    lineinfile:
+      state: present
+      dest: /etc/ssh/sshd_config
+      regexp: "^#AllowUsers|^AllowUsers"
+      line: "AllowUsers {{ user_name }} {{ ssh_allow_users }}"
+      validate: /usr/sbin/sshd -t -f %s
+
+  - name: Reload ssh
+    service:
+      name: sshd
+      enabled: yes
+      state: restarted
+    changed_when: no
+
+  - debug:
+      msg: "WARNING: User {{ user_name }} was created with random password or updated. Passwordless access has been applied. Please change your {{ user_name }} password as soon as possible if needed."

@@ -18,7 +18,6 @@
       - curl
       - ebtables
       - ethtool
-      - fail2ban
       - gnupg-agent
       - htop
       - iptraf-ng
@@ -77,9 +76,33 @@
       group: monero
       state: touch
 
+  - name: Copying torrc to remote server
+    copy:
+      src: artifacts/torrc
+      dest: /etc/tor/torrc
+      owner: root
+      group: root
+
+  - name: Restart tor service
+    systemd:
+      state: restarted
+      enabled: yes
+      daemon_reload: yes
+      name: tor
+
+  - name: Get Tor hostname from /var/lib/tor/monero/hostname
+    shell: cat /var/lib/tor/monero/hostname
+    register: tor_monero_hostname
+
+  - debug:
+      msg: "Your current onion hostname is {{ tor_monero_hostname.stdout }}:18089"
+
+  - debug:
+      msg: "Remove /var/lib/tor/monero directory if you need a new onion hostname"
+
   - name: Copy monero node configuration file from template
     template:
-      src: monero.conf.j2
+      src: monerod.conf.j2
       dest: /etc/monero/monerod.conf
 
   - name: Creating monero service config file
@@ -132,3 +155,4 @@
       name: netdata
       state: started
       enabled: yes
+
