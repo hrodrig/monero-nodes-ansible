@@ -4,7 +4,7 @@ Monero node ansible playbook setup and hardening
 
 ### Setup
 
-Edit `env_variables` file and set current monerod version, for example `v0.17.2.3` (current version).
+Edit `env_variables` file and set current monerod version, for example `v0.17.3.0` (current version).
 
 Edit `4-playbook-ssh-.yaml` file and edit:
 

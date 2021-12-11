@@ -59,25 +59,35 @@
       rule: deny
       port: '53'
 
+  # Open firewall ports
+  # If you use a firewall (and you should), open 18080 and 18081 ports for incoming TCP connections. 
+  # These are for the incoming clearnet connections, P2P and RPC respectively.
+  # You do not need to open any ports for Tor. The onion services work with virtual ports. 
+  # The tor daemon does not directly accept incoming connections and so it needs no open ports.
+  #
+  # Binds the daemon to an IP address. You need to use your external IP if you plan to access this 
+  # daemon from outside the internal network, or an internal one if you only want it to work for 
+  # devices in the same network. If you are unsure about whether to use internal or external, you 
+  # most likely want to use the external IP address. You can find this by using the IP address 
+  # the VPS provider gave you or by searching for it with a site such as ipleak.net.
+  # Binds the daemon to a port. Keep in mind the daemon will be unsafe unless this option is 
+  # also run with --restricted-rpc. The default option is 18081, though some services (such as MoneroWorld) use 18089.
   - name: Allow monerod p2p port tcp port 18080
     community.general.ufw:
       rule: allow
       port: '18080'
       proto: tcp
-
-  # Open firewall ports
-  # If you use a firewall (and you should), open 18080 and 18081 ports for incoming TCP connections. These are for the incoming clearnet connections, P2P and RPC respectively.
-  # You do not need to open any ports for Tor. The onion services work with virtual ports. The tor daemon does not directly accept incoming connections and so it needs no open ports.
-  #
-  # Binds the daemon to an IP address. You need to use your external IP if you plan to access this daemon from outside the internal network, or an internal one if you only want it to work for devices in the same network. If you are unsure about whether to use internal or external, you most likely want to use the external IP address. You can find this by using the IP address the VPS provider gave you or by searching for it with a site such as ipleak.net.
-  # Binds the daemon to a port. Keep in mind the daemon will be unsafe unless this option is also run with --restricted-rpc. The default option is 18081, though some services (such as MoneroWorld) use 18089.
   - name: Allow monerod RPC port tcp port 18081
     community.general.ufw:
       rule: allow
       port: '18081'
       proto: tcp
-
-  - name: Allow monerod restricted RPC port 18089
+  - name: Allow monerod restricted RPC optional port 18083
+    community.general.ufw:
+      rule: allow
+      port: '18083'
+      proto: tcp
+  - name: Allow monerod restricted RPC custom port 18089
     community.general.ufw:
       rule: allow
       port: '18089'
