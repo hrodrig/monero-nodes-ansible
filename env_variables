@@ -10,10 +10,10 @@ ssh_listen_address: "0.0.0.0"
 ssh_MACs: "hmac-sha2-512,hmac-sha2-256"
 ssh_max_sessions: 4
 ssh_max_startups: "10:30:100"
-ssh_root_login: "without-password"                # prohibit-password
-ssh_allow_users: "sam root"  # users allowed to to ssh, ex: sam root@1.1.1.1
+ssh_root_login: "without-password"    # prohibit-password
+ssh_allow_users: "root"               # users allowed to to ssh, ex: sam root@1.1.1.1
 
-fail2ban_ignoreips: [127.0.0.1/8]     # which IP address/CIDR mask/DNS host should be ignored from fail2ban's actions
+fail2ban_ignoreips: [127.0.0.1/8]     # which IP address/CIDR mask/DNS host should be ignored from fail2ban's actions. Ex: [127.0.0.1/8, 1.1.1.1/32]
 fail2ban_maxretry: 3                  # maximum number of retries before the host is put into jail
 fail2ban_findtime: "1m"               # a host is banned if it has generated fail2ban_maxretry during the last fail2ban_findtime
 fail2ban_bantime: "1d"                # sets the bantime
