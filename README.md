@@ -10,21 +10,7 @@ see changelog [here](CHANGELOG.md)
 
 Edit `env_variables` file and set current monerod version, for example `v0.17.3.0` (current version).
 
-Edit `4-playbook-ssh-.yaml` file and edit:
-
-```yaml
-  - name: Ensure valid ssh accounts
-    lineinfile:
-      state: present
-      dest: /etc/ssh/sshd_config
-      regexp: "^#AllowUsers|^AllowUsers"
-      line: 'AllowUsers root'
-      validate: /usr/sbin/sshd -t -f %s
-```
-
-and add you user to `AllowUsers root`, for example `AllowUsers myusername root`
-
-Edit `hosts` file and include your own nodes, for example:
+Edit `hosts` file and include your nodes, for example:
 
 ```shell
 [nodes]
@@ -56,7 +42,7 @@ root@node0:~# ansible-playbook 5-playbook-firewall.yaml
 root@node0:~# ansible-playbook 1-playbook-monero-nodes.yaml 2-playbook-kernel-hardening.yaml 3-playbook-aide.yaml 4-playbook-ssh.yaml 5-playbook-firewall.yaml
 ```
 
-  **Tip:** you can speed bootstrap download by commenting `db-sync-mode=safe` in `/etc/monero/monerod.conf` file and restart monerod service. After initial bootstrap download, it's recommend to set active the db-sync-mode option.
+  **Tip:** you can speed bootstrap download by comment `db-sync-mode=safe` in `/etc/monero/monerod.conf` file and restart monerod service. After initial bootstrap download, it's recommend to set active the db-sync-mode option.
 
 
 Check for monero logs:
