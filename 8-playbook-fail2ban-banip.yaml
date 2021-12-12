@@ -272,6 +272,7 @@
   - name: ban "bad boys" ip address
     shell: fail2ban-client set sshd banip {{item}}
     with_items:
+      - 104.244.78.62
       - 112.85.42.72
       - 115.76.97.175
       - 116.105.77.128
