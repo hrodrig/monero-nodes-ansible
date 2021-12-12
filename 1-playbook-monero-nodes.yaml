@@ -28,6 +28,7 @@
       - netstat-nat
       - socat
       - software-properties-common
+      - sshguard
       - tor
       - ufw
       - unzip
