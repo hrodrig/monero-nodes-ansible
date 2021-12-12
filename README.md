@@ -24,22 +24,22 @@ then apply your manifests, (you need to be sure that the ssh passworless access 
 
 ```shell
 # base file
-root@node0:~# ansible-playbook 1-playbook-monero-nodes.yaml
+root@localhost:~# ansible-playbook 1-playbook-monero-nodes.yaml
 
 # some kernel hardening
-root@node0:~# ansible-playbook 2-playbook-kernel-hardening.yaml
+root@localhost:~# ansible-playbook 2-playbook-kernel-hardening.yaml
 
 # configure AIDE
-root@node0:~# ansible-playbook 3-playbook-aide.yaml
+root@localhost:~# ansible-playbook 3-playbook-aide.yaml
 
 # SSH hardening
-root@node0:~# ansible-playbook 4-playbook-ssh.yaml
+root@localhost:~# ansible-playbook 4-playbook-ssh.yaml
 
 # Firewall configuration
-root@node0:~# ansible-playbook 5-playbook-firewall.yaml
+root@localhost:~# ansible-playbook 5-playbook-firewall.yaml
 
 # you can use all playboks at same time
-root@node0:~# ansible-playbook 1-playbook-monero-nodes.yaml 2-playbook-kernel-hardening.yaml 3-playbook-aide.yaml 4-playbook-ssh.yaml 5-playbook-firewall.yaml
+root@localhost:~# ansible-playbook 1-playbook-monero-nodes.yaml 2-playbook-kernel-hardening.yaml 3-playbook-aide.yaml 4-playbook-ssh.yaml 5-playbook-firewall.yaml
 ```
 
   **Tip:** you can speed bootstrap download by comment `db-sync-mode=safe` in `/etc/monero/monerod.conf` file and restart monerod service. After initial bootstrap download, it's recommend to set active the db-sync-mode option.
@@ -337,7 +337,13 @@ By editing the `env_variables` file you can set your custom values to define Fai
 
 ```bash
 # Setup Fail2Ban (is important to avoid SSH attacks)
-root@node0:~# ansible-playbook 6-playbook-fail2ban.yaml
+root@localhost:~# ansible-playbook 6-playbook-fail2ban.yaml
+```
+
+You can manually view banned ip's with:
+
+```shell
+root@node1:~# fail2ban-client status sshd
 ```
 
 # Additional sudo user
@@ -350,7 +356,7 @@ You can customize these settings in the `env_variables` file.
 
 ```bash
 # Custom sudo user (recommended)
-root@node0:~# ansible-playbook 7-playbook-users.yaml
+root@localhost:~# ansible-playbook 7-playbook-users.yaml
 ```
 
 # Donation Address
